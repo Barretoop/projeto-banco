@@ -1,0 +1,39 @@
+Abertura de conta PF
+    Nome
+    CPF
+    Endereço
+    Telefone
+    Celular
+    Email
+    Agencia
+    Conta
+    Conta-especial
+
+Alteraçao de conta
+    Alterar conta
+    Exclusão de conta
+
+Abertura de conta PJ
+    Razão Social
+    CNPJ
+    Endereço
+    Telefone
+    Email
+    Agencia
+    Conta
+
+Cadastro do Banco
+    Nome do Banco
+    Código do Banco
+    Agência
+    Gerente
+    Exclusão de banco
+
+Serviços de conta
+    Deposito
+    Saque
+    Movimenta
+    Saldo Atual
+    Saldo Anterior
+
+    
