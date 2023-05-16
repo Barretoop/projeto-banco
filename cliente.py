@@ -47,6 +47,7 @@ class Movimento:
         self.tipo = tipo
         self.valor = valor
 
+
 def cadastrar_cliente():
     nome = input("Digite o nome do cliente: ")
     cpf = input("Digite o CPF do cliente: ")
