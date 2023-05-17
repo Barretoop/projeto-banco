@@ -1,5 +1,5 @@
 import conta
-import cliente
+import clienteB
 import especial
 
 
@@ -27,15 +27,15 @@ while True:
     opcao = input("Digite a opção desejada: ")
 
     if opcao == "1":
-        cliente.cadastrar_cliente()
+        clienteB.cadastrar_cliente()
     elif opcao == "2":
-        cliente.alterar_cliente()
+        clienteB.alterar_cliente()
     elif opcao == "3":
-        cliente. consultar_cliente()
+        clienteB. consultar_cliente()
     elif opcao == "4":
-        cliente. remover_cliente()
+        clienteB. remover_cliente()
     elif opcao == "5":
-        cliente.cadastrar_conta()
+        clienteB.cadastrar_conta()
     elif opcao == "6":
         especial.cadastrar_conta_especial()
     elif opcao == "7":

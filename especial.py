@@ -1,4 +1,4 @@
-import cliente
+import clienteB
 
 
 def cadastrar_conta_especial():
