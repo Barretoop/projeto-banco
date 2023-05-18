@@ -5,24 +5,28 @@ from tkinter import font
 from clienteB import cadastrar_cliente
 
 
+
 customtkinter.set_appearance_mode("System")  
 customtkinter.set_default_color_theme("blue")  
-# app=tk.Tk()
+# CadastroCliente = customtkinter.CTkToplevel()
 
 
 
 
-class CadastroCliente():
+
+
+
+class CadastroCliente(customtkinter.CTkToplevel):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.abertura=customtkinter.CTkToplevel()
-        self.abertura.geometry("600x500")
-        self.abertura.grid_columnconfigure(1, weight=1)
-        self.abertura.grid_rowconfigure(5, weight=0)
+        # self=customtkinter.CTkToplevel()
+        self.geometry("500x500")
+        self.grid_columnconfigure(1, weight=1)
+        self.grid_rowconfigure(5, weight=0)
 
-        f1 = customtkinter.CTkFrame(self.abertura, width=100, height=50)
-        f2 = customtkinter.CTkFrame(self.abertura, width=100, height=50)
-        f3 = customtkinter.CTkFrame(self.abertura, width=100, height=50)
+        f1 = customtkinter.CTkFrame(self, width=100, height=50)
+        f2 = customtkinter.CTkFrame(self, width=100, height=50)
+        f3 = customtkinter.CTkFrame(self, width=100, height=50)
         f1.grid(row=0, column=0, sticky="nsew")
         f2.grid(row=0, column=1, sticky="nsew")
         f3.grid(row=0, column=2, sticky="nsew")
@@ -31,31 +35,31 @@ class CadastroCliente():
         label_texto = customtkinter.CTkLabel(f2, text=texto)
         label_texto.pack()
 
-        self.abertura.title('Cadastro de Cliente')
+        self.title('Cadastro de Cliente')
 
-        label_nome = customtkinter.CTkLabel(self.abertura, text="Digite seu nome")
+        label_nome = customtkinter.CTkLabel(self, text="Digite seu nome")
         label_nome.grid(row=1, column=0, sticky="nswe", padx=10, pady=10)
-        self.entry_nome = customtkinter.CTkEntry(self.abertura, placeholder_text="Digite seu nome completo")
+        self.entry_nome = customtkinter.CTkEntry(self, placeholder_text="Digite seu nome completo")
         self.entry_nome.grid(row=1, column=1, sticky="nswe", padx=10, pady=10)
 
-        label_cpf = customtkinter.CTkLabel(self.abertura, text="Digite seu CPF")
+        label_cpf = customtkinter.CTkLabel(self, text="Digite seu CPF")
         label_cpf.grid(row=2, column=0, sticky="nswe", padx=10, pady=10)
-        self.entry_cpf = customtkinter.CTkEntry(self.abertura, placeholder_text="Digite seu CPF")
+        self.entry_cpf = customtkinter.CTkEntry(self, placeholder_text="Digite seu CPF")
         self.entry_cpf.grid(row=2, column=1, sticky="nswe", padx=10, pady=10)
 
-        label_endereco = customtkinter.CTkLabel(self.abertura, text="Digite seu Endereço")
+        label_endereco = customtkinter.CTkLabel(self, text="Digite seu Endereço")
         label_endereco.grid(row=3, column=0, sticky="nswe", padx=10, pady=10)
-        self.entry_endereco = customtkinter.CTkEntry(self.abertura, placeholder_text="Digite seu Endereço")
+        self.entry_endereco = customtkinter.CTkEntry(self, placeholder_text="Digite seu Endereço")
         self.entry_endereco.grid(row=3, column=1, sticky="nswe", padx=10, pady=10)
 
-        label_telefone = customtkinter.CTkLabel(self.abertura, text="Digite seu telefone")
+        label_telefone = customtkinter.CTkLabel(self, text="Digite seu telefone")
         label_telefone.grid(row=4, column=0, sticky="nswe", padx=10, pady=10)
-        self.entry_telefone = customtkinter.CTkEntry(self.abertura, placeholder_text="Digite seu telefone")
+        self.entry_telefone = customtkinter.CTkEntry(self, placeholder_text="Digite seu telefone")
         self.entry_telefone.grid(row=4, column=1, sticky="nswe", padx=10, pady=10)
 
-        label_email = customtkinter.CTkLabel(self.abertura, text="Digite seu email")
+        label_email = customtkinter.CTkLabel(self, text="Digite seu email")
         label_email.grid(row=5, column=0, sticky="nswe", padx=10, pady=10)
-        self.entry_email = customtkinter.CTkEntry(self.abertura, placeholder_text="Digite seu email")
+        self.entry_email = customtkinter.CTkEntry(self, placeholder_text="Digite seu email")
         self.entry_email.grid(row=5, column=1, sticky="nswe", padx=10, pady=10)
 
         # label_agencia = customtkinter.CTkLabel(self, text="Digite seu agencia")
@@ -71,7 +75,8 @@ class CadastroCliente():
 
         # label_especial = customtkinter.CTkLabel(self, text="Cliente especial?")
         # label_especial.grid(row=8, column=0, sticky="nswe", padx=10, pady=10)
-        self.enviar_dados = customtkinter.CTkButton(self.abertura, text="Salvar", command=self.cadastrar)
+
+        self.enviar_dados = customtkinter.CTkButton(self, text="Salvar", command=self.cadastrar)
         self.enviar_dados.grid(row=9, column=0, columnspan=2, pady=10)
         
         
@@ -83,8 +88,9 @@ class CadastroCliente():
         telefone = self.entry_telefone.get()
         email = self.entry_email.get()
         
-        cadastrar_cliente(self ,nome, cpf, endereco, telefone, email)
-
+        
+        cadastrar_cliente(self, nome, cpf, endereco, telefone, email)
+        
         
 
 
@@ -97,7 +103,7 @@ class AberturaPJ(customtkinter.CTkToplevel):
     def __init__(self):
         super().__init__()
         self.abeturaPJ = customtkinter.CTkToplevel()
-        self.abeturaPJ.geometry("600x500")
+        self.abeturaPJ.geometry("500x500")
         self.abeturaPJ.grid_columnconfigure(1, weight=1)
         self.abeturaPJ.grid_rowconfigure(5, weight=0)
 
@@ -156,9 +162,9 @@ class AberturaPJ(customtkinter.CTkToplevel):
         self.enviar_dados = customtkinter.CTkButton(self.abeturaPJ, text="Salvar")
         self.enviar_dados.grid(row=9, column=0, columnspan=2, pady=10)
 
-        self.nome_var = tk.StringVar()
-        self.especial = customtkinter.CTkCheckBox(self.abeturaPJ, text="Sim", variable=self.nome_var)
-        self.especial.grid(row=8, column=1)
+        # self.nome_var = tk.StringVar()
+        # self.especial = customtkinter.CTkCheckBox(self.abeturaPJ, text="Sim", variable=self.nome_var)
+        # self.especial.grid(row=8, column=1)
 
 class Alteraçao(customtkinter.CTkToplevel):
     def __init__(self):
@@ -261,10 +267,13 @@ class MovimentaBancaria(customtkinter.CTkToplevel):
 
     
 class App(customtkinter.CTk):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)  
+    def __init__(self):
+        super().__init__()  
         self.grid_columnconfigure((0, 1), weight=2)
         self.geometry("600x500")
+
+        customtkinter.set_appearance_mode("System")  
+        customtkinter.set_default_color_theme("blue")
         texto_banco = customtkinter.CTkLabel(self, text="Sistema Bancario do Desenvolvedor")
         texto_banco.grid(row=2, column=1, padx=20, pady=20)
 
@@ -285,17 +294,13 @@ class App(customtkinter.CTk):
         cadastro_banco.grid(row=5, column=0, padx=20, pady=20)
 
 
-        servico_conta = customtkinter.CTkButton(self, text="Serviços de Conta", command=MovimentaBancaria)
+        servico_conta = customtkinter.CTkButton(self, text="Serviços de conta", command=MovimentaBancaria)
         servico_conta.grid(row=6, column=0, padx=20, pady=20)
         
         self.toplevel_window = None
-       
-
-
 
 
 # App.title("Sistema Bancario do Desenvolvedor")
+# app=tk.Tk()
 app = App()
-
-
 app.mainloop()
