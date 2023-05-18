@@ -1,5 +1,4 @@
 import customtkinter
-from tkinter import * 
 import tkinter as tk
 from tkinter import font
 from clienteB import cadastrar_cliente
@@ -276,6 +275,7 @@ class App(customtkinter.CTk):
         customtkinter.set_default_color_theme("blue")
         texto_banco = customtkinter.CTkLabel(self, text="Sistema Bancario do Desenvolvedor")
         texto_banco.grid(row=2, column=1, padx=20, pady=20)
+        self.title("Sistema Bancario do Desenvolvedor")
 
 
         abertura_pf = customtkinter.CTkButton(self, text="Abertura de Conta PF", command=CadastroCliente)
@@ -300,7 +300,9 @@ class App(customtkinter.CTk):
         self.toplevel_window = None
 
 
+
+
+
 # App.title("Sistema Bancario do Desenvolvedor")
-# app=tk.Tk()
 app = App()
 app.mainloop()
