@@ -3,7 +3,6 @@ Abertura de conta PF
     CPF
     Endereço
     Telefone
-    Celular
     Email
     Agencia
     Conta
