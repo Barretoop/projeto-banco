@@ -7,25 +7,19 @@ from CTkMessagebox import CTkMessagebox
 
 
 
-customtkinter.set_appearance_mode("System")  
-customtkinter.set_default_color_theme("blue")  
-
-
-
-
-
-
 class PjPf():
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         msg = CTkMessagebox(title="Qual tipo de conta ?", message="Pessoa Fisica ou Juridica ?",  
-                                icon="question",option_1="Juridica", option_3="Fisica")
+                                icon="question",option_1="Cancelar", option_3="Fisica", option_2="Juridica")
         response = msg.get()
         if response =="Fisica":
            
            self.abrir_cadastro_cliente_PF()
         elif response == "Juridica":
             self._abrir_cadastro_cliente_Pj()
+        else:
+            msg.destroy()
 
 
 
@@ -125,8 +119,7 @@ class PjPf():
 
 
     
-    
-    # def agencia_cadastrada(self):
+
 
         
 
@@ -308,9 +301,8 @@ class App(customtkinter.CTk):
         super().__init__(master)  
         self.grid_columnconfigure((0, 1), weight=2)
         self.geometry("600x500")
-
-        customtkinter.set_appearance_mode("System")  
-        customtkinter.set_default_color_theme("blue")
+        customtkinter.set_appearance_mode("dark")
+       
         texto_banco = customtkinter.CTkLabel(self, text="Sistema Bancario do Desenvolvedor")
         texto_banco.grid(row=2, column=1, padx=20, pady=20)
         self.title("Sistema Bancario do Desenvolvedor")
@@ -334,11 +326,6 @@ class App(customtkinter.CTk):
         self.toplevel_window = None
         
         
-
-
-
-
-# App.title("Sistema Bancario do Desenvolvedor")
 
 app = App()
 app.mainloop()
