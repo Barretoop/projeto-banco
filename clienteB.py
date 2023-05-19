@@ -49,7 +49,12 @@ def cadastrar_cliente(self, nome, cpf, endereco, telefone, email):
     
     if response=="sair":
         self.destroy()       
-    
+
+
+
+class Banco:
+     def __init__(self, banco ) :
+          pass
 
 # def consultar_cliente():
 #     cpf = entry_consulta_cpf.get()
