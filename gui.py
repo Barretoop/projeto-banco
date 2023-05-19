@@ -2,7 +2,10 @@ import customtkinter
 import tkinter as tk
 from tkinter import font
 from clienteB import cadastrar_cliente
+from clienteB import cadastrar_banco
 from CTkMessagebox import CTkMessagebox
+import sqlite3
+
 
 
 
@@ -68,37 +71,49 @@ class PjPf():
             self.entry_email = customtkinter.CTkEntry(Cad_pf, placeholder_text="Digite seu email")
             self.entry_email.grid(row=5, column=1, sticky="nswe", padx=10, pady=10)
 
+            label_conta = customtkinter.CTkLabel(Cad_pf, text="Digite numero da conta ")
+            label_conta.grid(row=8, column=0, sticky="nswe", padx=10, pady=10)
+            self.entry_conta = customtkinter.CTkEntry(Cad_pf, placeholder_text="Digite o numero da conta")
+            self.entry_conta.grid(row=8, column=1, sticky="nswe", padx=10, pady=10)
+
             label_ag = customtkinter.CTkLabel(Cad_pf, text="Qual agencia deseja Vincular")
             label_ag.grid(row=6, column=0, sticky="nswe", padx=10, pady=10)
-
-            Ag_var = customtkinter.StringVar(value="option 2")
-            
-            Ag = customtkinter.CTkOptionMenu(Cad_pf, values="",
-                                        
-                                        variable=Ag_var)
-            Ag.grid(row=6, column=1, sticky="nswe", padx=10, pady=10)
-            Ag.set("Selecione")
-
-
-
 
             label_gen = customtkinter.CTkLabel(Cad_pf, text="Qual Gerente vincular")
             label_gen.grid(row=7, column=0, sticky="nswe", padx=10, pady=10)
             
-            optionmenu_var = customtkinter.StringVar(value="option 2")
+            conn = sqlite3.connect('clientes.db')
+            cursor = conn.cursor()
+            cursor.execute("SELECT banco FROM bancos ")
+            banco_sel = cursor.fetchall()
+
+
+
             
-            optionmenu = customtkinter.CTkOptionMenu(Cad_pf, values="",
+
+            
+
+            
+            # optionmenu_var = customtkinter.StringVar(Cad_pf)
+
+
+            # optionmenu = customtkinter.CTkOptionMenu(Cad_pf, values= [*bc_var],
                                         
-                                        variable=optionmenu_var)
-            optionmenu.grid(row=7, column=1, sticky="nswe", padx=10, pady=10)
-            optionmenu.set("Selecione")
+            #                             variable=optionmenu_var)
+            # optionmenu.grid(row=7, column=1, sticky="nswe", padx=10, pady=10)
+            # optionmenu.set("Selecione")
 
 
 
-            label_conta = customtkinter.CTkLabel(Cad_pf, text="Digite numero da conta ")
-            label_conta.grid(row=8, column=0, sticky="nswe", padx=10, pady=10)
-            self.conta = customtkinter.CTkEntry(Cad_pf, placeholder_text="Digite seu conta")
-            self.conta.grid(row=8, column=1, sticky="nswe", padx=10, pady=10)
+            banco_sel = customtkinter.StringVar()
+            
+            bc = customtkinter.CTkOptionMenu(Cad_pf, values="bc_var",
+                                                    
+                                                    variable=banco_sel)
+            bc.grid(row=6, column=1, sticky="nswe", padx=10, pady=10)
+            bc.set("Selecione")
+
+            
 
             # label_especial = customtkinter.CTkLabel(Cad_pf, text="Cliente especial?")
             # label_especial.grid(row=8, column=0, sticky="nswe", padx=10, pady=10)
@@ -113,9 +128,15 @@ class PjPf():
         endereco = self.entry_endereco.get()
         telefone = self.entry_telefone.get()
         email = self.entry_email.get()
+        conta = self.entry_conta.get()
         
-        
-        cadastrar_cliente(self, nome, cpf, endereco, telefone, email)
+        cadastrar_cliente(self, nome, cpf, endereco, telefone, email, conta)
+
+    # def bancoCadastrados(self):
+    #     conn = sqlite3.connect('clientes.db')
+    #     cursor = conn.cursor()
+    #     cursor.execute("SELECT banco FROM bancos ")
+    #     bc_var = cursor.fetchall()
 
 
     
@@ -249,21 +270,29 @@ class CadastroBanco:
 
         label_nome_banco = customtkinter.CTkLabel(self.alteracao, text="Digite o nome do banco")
         label_nome_banco.grid(row=1, column=0, sticky="nswe", padx=10, pady=10)
-        self.banco = customtkinter.CTkEntry(self.alteracao, placeholder_text="Nome")
-        self.banco.grid(row=1, column=1, sticky="nswe", padx=10, pady=10)
+        self.entry_banco = customtkinter.CTkEntry(self.alteracao, placeholder_text="Nome")
+        self.entry_banco.grid(row=1, column=1, sticky="nswe", padx=10, pady=10)
 
         label_ag = customtkinter.CTkLabel(self.alteracao, text="Digite o Numero da agencia")
         label_ag.grid(row=2, column=0, sticky="nswe", padx=10, pady=10)
-        self.agencia = customtkinter.CTkEntry(self.alteracao, placeholder_text="Numero")
-        self.agencia.grid(row=2, column=1, sticky="nswe", padx=10, pady=10)
+        self.entry_agencia = customtkinter.CTkEntry(self.alteracao, placeholder_text="Numero")
+        self.entry_agencia.grid(row=2, column=1, sticky="nswe", padx=10, pady=10)
 
         label_gerente = customtkinter.CTkLabel(self.alteracao, text="Digite o nome do gerente")
         label_gerente.grid(row=3, column=0, sticky="nswe", padx=10, pady=10)
-        self.gerente = customtkinter.CTkEntry(self.alteracao, placeholder_text="Nome Completo")
-        self.gerente.grid(row=3, column=1, sticky="nswe", padx=10, pady=10)
+        self.entry_gerente = customtkinter.CTkEntry(self.alteracao, placeholder_text="Nome Completo")
+        self.entry_gerente.grid(row=3, column=1, sticky="nswe", padx=10, pady=10)
 
-        salvar_dados = customtkinter.CTkButton(self.alteracao, text="Salvar")
+        salvar_dados = customtkinter.CTkButton(self.alteracao, text="Salvar",command=self.cadastrarBanco)
         salvar_dados.grid(row=9, column=0, columnspan=2, pady=10)
+
+    def cadastrarBanco(self):
+        banco = self.entry_banco.get()
+        agencia = self.entry_agencia.get()
+        gerente = self.entry_gerente.get()
+
+    
+        cadastrar_banco(self,banco,agencia,gerente)
   
 class MovimentaBancaria(customtkinter.CTkToplevel):
     def __init__(self):

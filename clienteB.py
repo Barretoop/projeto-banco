@@ -13,7 +13,7 @@ class Cliente:
         self.telefone = telefone
         self.email = email
 
-def cadastrar_cliente(self, nome, cpf, endereco, telefone, email):
+def cadastrar_cliente(self, nome, cpf, endereco, telefone, email, conta):
     
     conn = sqlite3.connect('clientes.db')
     cursor = conn.cursor()
@@ -29,15 +29,18 @@ def cadastrar_cliente(self, nome, cpf, endereco, telefone, email):
                         cpf TEXT,
                         endereco TEXT,
                         telefone TEXT,
-                        email TEXT)''')
+                        email TEXT,
+                        conta TEXT)''')
     
-    cursor.execute("INSERT INTO clientes VALUES (?, ?, ?, ?, ?)", (nome, cpf, endereco, telefone, email))
+    cursor.execute("INSERT INTO clientes VALUES (?, ?, ?, ?, ?, ?)", (nome, cpf, endereco, telefone, email ,conta))
     
     nome = self.entry_nome.get()
     cpf = self.entry_cpf.get()
     endereco = self.entry_endereco.get()
     telefone = self.entry_telefone.get()
     email = self.entry_email.get()
+    conta = self.entry_conta.get()
+
             
     
     conn.commit()
@@ -53,8 +56,45 @@ def cadastrar_cliente(self, nome, cpf, endereco, telefone, email):
 
 
 class Banco:
-     def __init__(self, banco ) :
-          pass
+      def __init__(self, banco, agencia, gerente):
+        self.banco = banco
+        self.agencia = agencia
+        self.gerente = gerente
+        
+def cadastrar_banco(self, banco,agencia,gerente ) :
+    conn = sqlite3.connect('clientes.db')
+    cursor = conn.cursor()
+    cursor.execute("""
+    SELECT count(*) FROM sqlite_master WHERE type='table' AND name='bancos'
+    """)
+    tabela_existe = cursor.fetchone()[0]
+
+    if not tabela_existe:
+            cursor.execute('''CREATE TABLE IF NOT EXISTS bancos (
+                        banco TEXT,
+                        agencia TEXT,
+                        gerente TEXT)''')
+            
+
+    cursor.execute("INSERT INTO bancos VALUES (?, ?, ?)", (banco,agencia,gerente))
+
+    banco = self.entry_banco.get()
+    agencia = self.entry_agencia.get()
+    gerente = self.entry_gerente.get()
+    conn.commit()
+    conn.close()
+    
+    
+    msg = CTkMessagebox(title="Oque deseja fazer ?", message="Banco cadastrado com Sucesso !",  
+                        icon="check", option_1="Cadastrar Outro Cliente", option_3="sair")
+    response = msg.get()
+    
+    if response=="sair":
+        self.destroy()  
+    
+    
+    
+            
 
 # def consultar_cliente():
 #     cpf = entry_consulta_cpf.get()
