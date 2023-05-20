@@ -3,6 +3,7 @@ import tkinter as tk
 from tkinter import font
 from clienteB import cadastrar_cliente
 from clienteB import cadastrar_banco
+from clienteB import buscar_cpf
 from CTkMessagebox import CTkMessagebox
 import sqlite3
 
@@ -26,174 +27,121 @@ class PjPf():
 
 
 
-
     def abrir_cadastro_cliente_PF(self):
-            Cad_pf=customtkinter.CTkToplevel()
-            Cad_pf.geometry("500x500")
-            Cad_pf.grid_columnconfigure(1, weight=1)
-            Cad_pf.grid_rowconfigure(5, weight=0)
+        Cad_pf=customtkinter.CTkToplevel()
+        Cad_pf.geometry("500x500")
+        Cad_pf.grid_columnconfigure(1, weight=1)
+        Cad_pf.grid_rowconfigure(5, weight=0)
 
-            f1 = customtkinter.CTkFrame(Cad_pf, width=100, height=50)
-            f2 = customtkinter.CTkFrame(Cad_pf, width=100, height=50)
-            f3 = customtkinter.CTkFrame(Cad_pf, width=100, height=50)
-            f1.grid(row=0, column=0, sticky="nsew")
-            f2.grid(row=0, column=1, sticky="nsew")
-            f3.grid(row=0, column=2, sticky="nsew")
-            
-            texto = "Abertura de conta PF"
-            label_texto = customtkinter.CTkLabel(f2, text=texto)
-            label_texto.pack()
-
-            Cad_pf.title('Cadastro de Cliente')
-
-            label_nome = customtkinter.CTkLabel(Cad_pf, text="Digite seu nome")
-            label_nome.grid(row=1, column=0, sticky="nswe", padx=10, pady=10)
-            self.entry_nome = customtkinter.CTkEntry(Cad_pf, placeholder_text="Digite seu nome completo")
-            self.entry_nome.grid(row=1, column=1, sticky="nswe", padx=10, pady=10)
-
-            label_cpf = customtkinter.CTkLabel(Cad_pf, text="Digite seu CPF")
-            label_cpf.grid(row=2, column=0, sticky="nswe", padx=10, pady=10)
-            self.entry_cpf = customtkinter.CTkEntry(Cad_pf, placeholder_text="Digite seu CPF")
-            self.entry_cpf.grid(row=2, column=1, sticky="nswe", padx=10, pady=10)
-
-            label_endereco = customtkinter.CTkLabel(Cad_pf, text="Digite seu Endereço")
-            label_endereco.grid(row=3, column=0, sticky="nswe", padx=10, pady=10)
-            self.entry_endereco = customtkinter.CTkEntry(Cad_pf, placeholder_text="Digite seu Endereço")
-            self.entry_endereco.grid(row=3, column=1, sticky="nswe", padx=10, pady=10)
-
-            label_telefone = customtkinter.CTkLabel(Cad_pf, text="Digite seu telefone")
-            label_telefone.grid(row=4, column=0, sticky="nswe", padx=10, pady=10)
-            self.entry_telefone = customtkinter.CTkEntry(Cad_pf, placeholder_text="Digite seu telefone")
-            self.entry_telefone.grid(row=4, column=1, sticky="nswe", padx=10, pady=10)
-
-            label_email = customtkinter.CTkLabel(Cad_pf, text="Digite seu email")
-            label_email.grid(row=5, column=0, sticky="nswe", padx=10, pady=10)
-            self.entry_email = customtkinter.CTkEntry(Cad_pf, placeholder_text="Digite seu email")
-            self.entry_email.grid(row=5, column=1, sticky="nswe", padx=10, pady=10)
-
-            label_conta = customtkinter.CTkLabel(Cad_pf, text="Digite numero da conta ")
-            label_conta.grid(row=8, column=0, sticky="nswe", padx=10, pady=10)
-            self.entry_conta = customtkinter.CTkEntry(Cad_pf, placeholder_text="Digite o numero da conta")
-            self.entry_conta.grid(row=8, column=1, sticky="nswe", padx=10, pady=10)
-
-            label_ag = customtkinter.CTkLabel(Cad_pf, text="Qual agencia deseja Vincular")
-            label_ag.grid(row=6, column=0, sticky="nswe", padx=10, pady=10)
-
-            label_gen = customtkinter.CTkLabel(Cad_pf, text="Qual Gerente vincular")
-            label_gen.grid(row=7, column=0, sticky="nswe", padx=10, pady=10)
-
-    
-    
-            self.enviar_dados = customtkinter.CTkButton(Cad_pf, text="Salvar", command=self.cadastrar)
-            self.enviar_dados.grid(row=10, column=0, columnspan=2, pady=10)
-
-
-
-            bancos = []
-            banco_sel = customtkinter.StringVar(value="Selecione")
-            bc = customtkinter.CTkOptionMenu(Cad_pf, values=[], variable=banco_sel)
-            bc.grid(row=6, column=1, sticky="nswe", padx=10, pady=10)
-            bc.set("Selecione")
-            bc.configure(values=bancos)
-    
-            conn = sqlite3.connect('clientes.db')
-            cursor = conn.cursor()
-            cursor.execute("SELECT banco FROM bancos ")
-            
-            resultados = cursor.fetchall()
-            for resultado in resultados:
-                bancos.append(resultado[0])
-            bc.configure(values=bancos)
-            
-
-
-            gerente= []
-
-            gen_sel = customtkinter.StringVar(value="Selecione")
-
-
-            gen = customtkinter.CTkOptionMenu(Cad_pf, values=[], variable=gen_sel)
-            gen.grid(row=7, column=1, sticky="nswe", padx=10, pady=10)
-            gen.set("Selecione")
-            gen.configure(values=gerente)
-
-            conn = sqlite3.connect('clientes.db')
-            cursor = conn.cursor()
-            cursor.execute("SELECT gerente FROM bancos ")
-            resultados_gen = cursor.fetchall()
-            for resultado_gen in resultados_gen:
-                gerente.append(resultado_gen[0])
-            gen.configure(values=gerente)
-
-
-            
-
-            label_especial = customtkinter.CTkLabel(Cad_pf, text="Cliente especial?")
-            label_especial.grid(row=9, column=0, sticky="nswe", padx=10, pady=10)
-            radiobutton_1 = customtkinter.CTkRadioButton(Cad_pf, text="1", variable="", value="1")
-            radiobutton_1.grid(row=9, column=1, sticky="nswe")
-
-
-
-
-            
-            
-
-
-
-
-
-
-
-
-
-            # radio= customtkinter.StringVar(value="")
-
-            # radiobutton_1 = customtkinter.CTkRadioButton(Cad_pf, text="1",variable=radio,value="1")
-            # radiobutton_1.grid(row=9, column=1, sticky="nswe")
-            
-            # resposta=radio.get()
-
-            # if resposta == "1":
-            #     print("tentei")
-            #     slider = customtkinter.CTkSlider(Cad_pf, from_=0, to=100  )
-            #     slider.grid(row=10, column=1, sticky="", width=100,height=20)
-
-            
-            
-             
-           
-            
-
-   
-
-
-
-    
+        f1 = customtkinter.CTkFrame(Cad_pf, width=100, height=50)
+        f2 = customtkinter.CTkFrame(Cad_pf, width=100, height=50)
+        f3 = customtkinter.CTkFrame(Cad_pf, width=100, height=50)
+        f1.grid(row=0, column=0, sticky="nsew")
+        f2.grid(row=0, column=1, sticky="nsew")
+        f3.grid(row=0, column=2, sticky="nsew")
         
+        texto = "Abertura de conta PF"
+        label_texto = customtkinter.CTkLabel(f2, text=texto)
+        label_texto.pack()
+
+        Cad_pf.title('Cadastro de Cliente')
+
+        label_nome = customtkinter.CTkLabel(Cad_pf, text="Digite seu nome")
+        label_nome.grid(row=1, column=0, sticky="nswe", padx=10, pady=10)
+        self.entry_nome = customtkinter.CTkEntry(Cad_pf, placeholder_text="Digite seu nome completo")
+        self.entry_nome.grid(row=1, column=1, sticky="nswe", padx=10, pady=10)
+
+        label_cpf = customtkinter.CTkLabel(Cad_pf, text="Digite seu CPF")
+        label_cpf.grid(row=2, column=0, sticky="nswe", padx=10, pady=10)
+        self.entry_cpf = customtkinter.CTkEntry(Cad_pf, placeholder_text="Digite seu CPF")
+        self.entry_cpf.grid(row=2, column=1, sticky="nswe", padx=10, pady=10)
+
+        label_endereco = customtkinter.CTkLabel(Cad_pf, text="Digite seu Endereço")
+        label_endereco.grid(row=3, column=0, sticky="nswe", padx=10, pady=10)
+        self.entry_endereco = customtkinter.CTkEntry(Cad_pf, placeholder_text="Digite seu Endereço")
+        self.entry_endereco.grid(row=3, column=1, sticky="nswe", padx=10, pady=10)
+
+        label_telefone = customtkinter.CTkLabel(Cad_pf, text="Digite seu telefone")
+        label_telefone.grid(row=4, column=0, sticky="nswe", padx=10, pady=10)
+        self.entry_telefone = customtkinter.CTkEntry(Cad_pf, placeholder_text="Digite seu telefone")
+        self.entry_telefone.grid(row=4, column=1, sticky="nswe", padx=10, pady=10)
+
+        label_email = customtkinter.CTkLabel(Cad_pf, text="Digite seu email")
+        label_email.grid(row=5, column=0, sticky="nswe", padx=10, pady=10)
+        self.entry_email = customtkinter.CTkEntry(Cad_pf, placeholder_text="Digite seu email")
+        self.entry_email.grid(row=5, column=1, sticky="nswe", padx=10, pady=10)
+
+        label_conta = customtkinter.CTkLabel(Cad_pf, text="Digite numero da conta ")
+        label_conta.grid(row=8, column=0, sticky="nswe", padx=10, pady=10)
+        self.entry_conta = customtkinter.CTkEntry(Cad_pf, placeholder_text="Digite o numero da conta")
+        self.entry_conta.grid(row=8, column=1, sticky="nswe", padx=10, pady=10)
+
+        label_ag = customtkinter.CTkLabel(Cad_pf, text="Qual agencia deseja Vincular")
+        label_ag.grid(row=6, column=0, sticky="nswe", padx=10, pady=10)
+
+        label_gen = customtkinter.CTkLabel(Cad_pf, text="Qual Gerente vincular")
+        label_gen.grid(row=7, column=0, sticky="nswe", padx=10, pady=10)
+
+
+        self.enviar_dados = customtkinter.CTkButton(Cad_pf, text="Salvar", command=self.cadastrar)
+        self.enviar_dados.grid(row=10, column=0, columnspan=2, pady=10)
+
+
+
+        bancos = []
+        banco_sel = customtkinter.StringVar(value="Selecione")
+        self.entry_bc = customtkinter.CTkOptionMenu(Cad_pf, values=[], variable=banco_sel)
+        self.entry_bc.grid(row=6, column=1, sticky="nswe", padx=10, pady=10)
+        self.entry_bc.set("Selecione")
+        self.entry_bc.configure(values=bancos)
+
+        conn = sqlite3.connect('clientes.db')
+        cursor = conn.cursor()
+        cursor.execute("SELECT banco FROM bancos ")
+        
+        resultados = cursor.fetchall()
+        for resultado in resultados:
+            bancos.append(resultado[0])
+        self.entry_bc.configure(values=bancos)
         
 
 
-        
-        
-        
-            
-        
-                
-          
-            
-            
-                
+        gerente= []
+
+        gen_sel = customtkinter.StringVar(value="Selecione")
+
+
+        self.entry_gen = customtkinter.CTkOptionMenu(Cad_pf, values=[], variable=gen_sel)
+        self.entry_gen.grid(row=7, column=1, sticky="nswe", padx=10, pady=10)
+        self.entry_gen.set("Selecione")
+        self.entry_gen.configure(values=gerente)
+
+        conn = sqlite3.connect('clientes.db')
+        cursor = conn.cursor()
+        cursor.execute("SELECT gerente FROM bancos ")
+        resultados_gen = cursor.fetchall()
+        for resultado_gen in resultados_gen:
+            gerente.append(resultado_gen[0])
+        self.entry_gen.configure(values=gerente)
 
 
 
+        def atualizar_label():
+                radio_var = radiobutton_1.get()
+                if radio_var == "on":
+                    slider.grid(row=10, column=1, sticky="nswe" )
+                else:
+                    slider.grid_forget()
 
+        radio_var = customtkinter.StringVar(value="off")
 
+        label_especial = customtkinter.CTkLabel(Cad_pf, text="Cliente especial escolha o valor do Limite?")
+        label_especial.grid(row=9, column=0, sticky="nswe", padx=10, pady=10)
+        radiobutton_1 = customtkinter.CTkSwitch(Cad_pf, text="Sim", variable=radio_var, onvalue="on", offvalue="off" ,command=atualizar_label)
+        radiobutton_1.grid(row=9, column=1, sticky="nswe")
+        print(radio_var.get())
+        slider = customtkinter.CTkSlider(Cad_pf, from_=0, to=100 ,width=100,height=20 )
 
-
-
-
-           
             
             
     def cadastrar(self):
@@ -203,26 +151,11 @@ class PjPf():
         telefone = self.entry_telefone.get()
         email = self.entry_email.get()
         conta = self.entry_conta.get()
-        
-        cadastrar_cliente(self, nome, cpf, endereco, telefone, email, conta)
-
-    # def bancoCadastrados(self):
-    #     conn = sqlite3.connect('clientes.db')
-    #     cursor = conn.cursor()
-    #     cursor.execute("SELECT banco FROM bancos ")
-    #     bc_var = cursor.fetchall()
-
-
-    
-
+        banco= self.entry_bc.get()
+        gerente = self.entry_gen.get()
 
         
-
-    
-
-
-
-
+        cadastrar_cliente(self, nome, cpf, endereco, telefone, email, conta,banco,gerente)
 
     def _abrir_cadastro_cliente_Pj(self):
         abeturaPJ = customtkinter.CTkToplevel()
@@ -291,16 +224,16 @@ class PjPf():
 
 
 
-class Alteraçao(customtkinter.CTkToplevel):
+class Alteracao:
     def __init__(self):
-        super().__init__()
-        self.geometry("600x500")
-        self.grid_columnconfigure(1, weight=1)
-        self.grid_rowconfigure(5, weight=0)
+        self.AltCliente=customtkinter.CTkToplevel()
+        self.AltCliente.geometry("600x500")
+        self.AltCliente.grid_columnconfigure(1, weight=1)
+        self.AltCliente.grid_rowconfigure(5, weight=0)
 
-        f1 = customtkinter.CTkFrame(self, width=100, height=50)
-        f2 = customtkinter.CTkFrame(self, width=100, height=50)
-        f3 = customtkinter.CTkFrame(self, width=100, height=50)
+        f1 = customtkinter.CTkFrame(self.AltCliente, width=100, height=50)
+        f2 = customtkinter.CTkFrame(self.AltCliente, width=100, height=50)
+        f3 = customtkinter.CTkFrame(self.AltCliente, width=100, height=50)
         f1.grid(row=0, column=0, sticky="nsew")
         f2.grid(row=0, column=1, sticky="nsew")
         f3.grid(row=0, column=2, sticky="nsew")
@@ -310,28 +243,48 @@ class Alteraçao(customtkinter.CTkToplevel):
         texto = font.Font(size=20)
         label_texto.pack()
 
-        self.title('Alteração de Cliente')
+        self.AltCliente.title('Alteração de Cliente')
 
-        label_nome = customtkinter.CTkLabel(self, text="Digite o CPF ou CNPJ")
+        label_nome = customtkinter.CTkLabel(self.AltCliente, text="Digite o CPF ou CNPJ")
         label_nome.grid(row=1, column=0, sticky="nswe", padx=10, pady=10)
 
-        nome = customtkinter.CTkEntry(self, placeholder_text="CPF ou CNPJ")
-        nome.grid(row=1, column=1, sticky="nswe", padx=10, pady=10)
+        self.entry_cpf = customtkinter.CTkEntry(self.AltCliente, placeholder_text="CPF ou CNPJ")
+        self.entry_cpf.grid(row=1, column=1, sticky="nswe", padx=10, pady=10)
 
-        alterar_dados = customtkinter.CTkButton(self, text="Alterar")
-        alterar_dados.grid(row=9, column=0, columnspan=2, pady=10)
+        busca_cpf = customtkinter.CTkButton(self.AltCliente, text="Alterar" ,command=self.buscarCPF)
+        busca_cpf.grid(row=9, column=0, columnspan=2, pady=10)
+
+    def buscarCPF(self):
+        cpf = self.entry_cpf.get()
+        
+
+
+        buscar_cpf(self,cpf)
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 class CadastroBanco:
     def __init__(self):
-        self.alteracao = customtkinter.CTkToplevel()
-        self.alteracao.geometry("600x500")
-        self.alteracao.grid_columnconfigure(1, weight=1)
-        self.alteracao.grid_rowconfigure(5, weight=0)
+        self.cadastroBanco = customtkinter.CTkToplevel()
+        self.cadastroBanco.geometry("600x500")
+        self.cadastroBanco.grid_columnconfigure(1, weight=1)
+        self.cadastroBanco.grid_rowconfigure(5, weight=0)
 
-        f1 = customtkinter.CTkFrame(self.alteracao, width=100, height=50)
-        f2 = customtkinter.CTkFrame(self.alteracao, width=100, height=50)
-        f3 = customtkinter.CTkFrame(self.alteracao, width=100, height=50)
+        f1 = customtkinter.CTkFrame(self.cadastroBanco, width=100, height=50)
+        f2 = customtkinter.CTkFrame(self.cadastroBanco, width=100, height=50)
+        f3 = customtkinter.CTkFrame(self.cadastroBanco, width=100, height=50)
         f1.grid(row=0, column=0, sticky="nsew")
         f2.grid(row=0, column=1, sticky="nsew")
         f3.grid(row=0, column=2, sticky="nsew")
@@ -340,24 +293,24 @@ class CadastroBanco:
         label_texto = customtkinter.CTkLabel(f2, text=texto)
         label_texto.pack()
 
-        self.alteracao.title('Cadastro de banco e Agencia e Gerente')
+        self.cadastroBanco.title('Cadastro de banco e Agencia e Gerente')
 
-        label_nome_banco = customtkinter.CTkLabel(self.alteracao, text="Digite o nome do banco")
+        label_nome_banco = customtkinter.CTkLabel(self.cadastroBanco, text="Digite o nome do banco")
         label_nome_banco.grid(row=1, column=0, sticky="nswe", padx=10, pady=10)
-        self.entry_banco = customtkinter.CTkEntry(self.alteracao, placeholder_text="Nome")
+        self.entry_banco = customtkinter.CTkEntry(self.cadastroBanco, placeholder_text="Nome")
         self.entry_banco.grid(row=1, column=1, sticky="nswe", padx=10, pady=10)
 
-        label_ag = customtkinter.CTkLabel(self.alteracao, text="Digite o Numero da agencia")
+        label_ag = customtkinter.CTkLabel(self.cadastroBanco, text="Digite o Numero da agencia")
         label_ag.grid(row=2, column=0, sticky="nswe", padx=10, pady=10)
-        self.entry_agencia = customtkinter.CTkEntry(self.alteracao, placeholder_text="Numero")
+        self.entry_agencia = customtkinter.CTkEntry(self.cadastroBanco, placeholder_text="Numero")
         self.entry_agencia.grid(row=2, column=1, sticky="nswe", padx=10, pady=10)
 
-        label_gerente = customtkinter.CTkLabel(self.alteracao, text="Digite o nome do gerente")
+        label_gerente = customtkinter.CTkLabel(self.cadastroBanco, text="Digite o nome do gerente")
         label_gerente.grid(row=3, column=0, sticky="nswe", padx=10, pady=10)
-        self.entry_gerente = customtkinter.CTkEntry(self.alteracao, placeholder_text="Nome Completo")
+        self.entry_gerente = customtkinter.CTkEntry(self.cadastroBanco, placeholder_text="Nome Completo")
         self.entry_gerente.grid(row=3, column=1, sticky="nswe", padx=10, pady=10)
 
-        salvar_dados = customtkinter.CTkButton(self.alteracao, text="Salvar",command=self.cadastrarBanco)
+        salvar_dados = customtkinter.CTkButton(self.cadastroBanco, text="Salvar",command=self.cadastrarBanco)
         salvar_dados.grid(row=9, column=0, columnspan=2, pady=10)
 
     def cadastrarBanco(self):
@@ -398,6 +351,7 @@ class MovimentaBancaria(customtkinter.CTkToplevel):
         alterar_dados = customtkinter.CTkButton(self, text="Salvar")
         alterar_dados.grid(row=9, column=0, columnspan=2, pady=10)
 
+
     
 class App(customtkinter.CTk):
     def __init__(self,master=None):
@@ -415,7 +369,7 @@ class App(customtkinter.CTk):
         abertura_pf.grid(row=2, column=0, padx=20, pady=20)
 
 
-        alteracao_conta = customtkinter.CTkButton(self, text="Alteração de conta",command=Alteraçao)
+        alteracao_conta = customtkinter.CTkButton(self, text="Alteração de conta",command=Alteracao)
         alteracao_conta.grid(row=4, column=0, padx=20, pady=20)
 
 

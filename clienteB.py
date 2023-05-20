@@ -1,7 +1,12 @@
 import tkinter as tk
 import sqlite3
 import customtkinter
+
 from CTkMessagebox import CTkMessagebox
+
+
+
+
 
 
 
@@ -13,7 +18,7 @@ class Cliente:
         self.telefone = telefone
         self.email = email
 
-def cadastrar_cliente(self, nome, cpf, endereco, telefone, email, conta):
+def cadastrar_cliente(self, nome, cpf, endereco, telefone, email, conta, banco, gerente):
     
     conn = sqlite3.connect('clientes.db')
     cursor = conn.cursor()
@@ -30,9 +35,11 @@ def cadastrar_cliente(self, nome, cpf, endereco, telefone, email, conta):
                         endereco TEXT,
                         telefone TEXT,
                         email TEXT,
-                        conta TEXT)''')
+                        conta TEXT,
+                        banco TEXT,
+                        gerente)''')
     
-    cursor.execute("INSERT INTO clientes VALUES (?, ?, ?, ?, ?, ?)", (nome, cpf, endereco, telefone, email ,conta))
+    cursor.execute("INSERT INTO clientes VALUES (?, ?, ?, ?, ?, ?,?,?)", (nome, cpf, endereco, telefone, email ,conta,banco,gerente))
     
     nome = self.entry_nome.get()
     cpf = self.entry_cpf.get()
@@ -40,6 +47,8 @@ def cadastrar_cliente(self, nome, cpf, endereco, telefone, email, conta):
     telefone = self.entry_telefone.get()
     email = self.entry_email.get()
     conta = self.entry_conta.get()
+    banco= self.entry_bc.get()
+    gerente = self.entry_gen.get()
 
             
     
@@ -95,28 +104,22 @@ def cadastrar_banco(self, banco,agencia,gerente ) :
     
     
             
-
-# def consultar_cliente():
-#     cpf = entry_consulta_cpf.get()
-
-#     conn = sqlite3.connect('clientes.db')
-#     cursor = conn.cursor()
-#     cursor.execute("SELECT * FROM clientes WHERE cpf=?", (cpf,))
-#     cliente = cursor.fetchone()
-#     conn.close()
-
-#     if cliente:
-#         label_consulta_resultado.config(text=f"Nome: {cliente[0]}\nCPF: {cliente[1]}\nEndereço: {cliente[2]}\nTelefone: {cliente[3]}\nEmail: {cliente[4]}")
-#     else:
-#         label_consulta_resultado.config(text="Cliente não encontrado")
-
-# def remover_cliente():
-#     cpf = entry_remocao_cpf.get()
-
-#     conn = sqlite3.connect('clientes.db')
-#     cursor = conn.cursor()
-#     cursor.execute("DELETE FROM clientes WHERE cpf=?", (cpf,))
-#     conn.commit()
-#     conn.close()
-
-#     print("Cliente removido com sucesso!")
+def buscar_cpf(self,cpf):
+    conn = sqlite3.connect('clientes.db')
+    cursor = conn.cursor()
+    AltCliente=customtkinter.CTkToplevel()
+    cursor.execute("SELECT * FROM clientes WHERE cpf = ?", (cpf,))
+    resultado = cursor.fetchall()
+    cpf = self.entry_cpf.get()
+    for i, linha in enumerate(resultado):
+            
+            entry = customtkinter.CTkLabel(AltCliente,text=linha[0]) 
+            entry.grid(row=i, column=0)
+            
+    # for i, linha in enumerate(resultado):
+    #         for j, valor in enumerate(linha):
+    #             entry = customtkinter.CTkEntry(AltCliente)
+    #             entry.insert(valor)
+    #             entry.grid(row=i+1, column=j)
+    print(resultado)
+    conn.close()
