@@ -81,45 +81,119 @@ class PjPf():
 
             label_gen = customtkinter.CTkLabel(Cad_pf, text="Qual Gerente vincular")
             label_gen.grid(row=7, column=0, sticky="nswe", padx=10, pady=10)
-            
+
+    
+    
+            self.enviar_dados = customtkinter.CTkButton(Cad_pf, text="Salvar", command=self.cadastrar)
+            self.enviar_dados.grid(row=10, column=0, columnspan=2, pady=10)
+
+
+
+            bancos = []
+            banco_sel = customtkinter.StringVar(value="Selecione")
+            bc = customtkinter.CTkOptionMenu(Cad_pf, values=[], variable=banco_sel)
+            bc.grid(row=6, column=1, sticky="nswe", padx=10, pady=10)
+            bc.set("Selecione")
+            bc.configure(values=bancos)
+    
             conn = sqlite3.connect('clientes.db')
             cursor = conn.cursor()
             cursor.execute("SELECT banco FROM bancos ")
-            banco_sel = cursor.fetchall()
+            
+            resultados = cursor.fetchall()
+            for resultado in resultados:
+                bancos.append(resultado[0])
+            bc.configure(values=bancos)
+            
 
+
+            gerente= []
+
+            gen_sel = customtkinter.StringVar(value="Selecione")
+
+
+            gen = customtkinter.CTkOptionMenu(Cad_pf, values=[], variable=gen_sel)
+            gen.grid(row=7, column=1, sticky="nswe", padx=10, pady=10)
+            gen.set("Selecione")
+            gen.configure(values=gerente)
+
+            conn = sqlite3.connect('clientes.db')
+            cursor = conn.cursor()
+            cursor.execute("SELECT gerente FROM bancos ")
+            resultados_gen = cursor.fetchall()
+            for resultado_gen in resultados_gen:
+                gerente.append(resultado_gen[0])
+            gen.configure(values=gerente)
 
 
             
 
-            
-
-            
-            # optionmenu_var = customtkinter.StringVar(Cad_pf)
-
-
-            # optionmenu = customtkinter.CTkOptionMenu(Cad_pf, values= [*bc_var],
-                                        
-            #                             variable=optionmenu_var)
-            # optionmenu.grid(row=7, column=1, sticky="nswe", padx=10, pady=10)
-            # optionmenu.set("Selecione")
+            label_especial = customtkinter.CTkLabel(Cad_pf, text="Cliente especial?")
+            label_especial.grid(row=9, column=0, sticky="nswe", padx=10, pady=10)
+            radiobutton_1 = customtkinter.CTkRadioButton(Cad_pf, text="1", variable="", value="1")
+            radiobutton_1.grid(row=9, column=1, sticky="nswe")
 
 
 
-            banco_sel = customtkinter.StringVar()
-            
-            bc = customtkinter.CTkOptionMenu(Cad_pf, values="bc_var",
-                                                    
-                                                    variable=banco_sel)
-            bc.grid(row=6, column=1, sticky="nswe", padx=10, pady=10)
-            bc.set("Selecione")
 
             
+            
 
-            # label_especial = customtkinter.CTkLabel(Cad_pf, text="Cliente especial?")
-            # label_especial.grid(row=8, column=0, sticky="nswe", padx=10, pady=10)
+
+
+
+
+
+
+
+
+            # radio= customtkinter.StringVar(value="")
+
+            # radiobutton_1 = customtkinter.CTkRadioButton(Cad_pf, text="1",variable=radio,value="1")
+            # radiobutton_1.grid(row=9, column=1, sticky="nswe")
+            
+            # resposta=radio.get()
+
+            # if resposta == "1":
+            #     print("tentei")
+            #     slider = customtkinter.CTkSlider(Cad_pf, from_=0, to=100  )
+            #     slider.grid(row=10, column=1, sticky="", width=100,height=20)
+
+            
+            
+             
+           
+            
+
+   
+
+
+
     
-            self.enviar_dados = customtkinter.CTkButton(Cad_pf, text="Salvar", command=self.cadastrar)
-            self.enviar_dados.grid(row=9, column=0, columnspan=2, pady=10)
+        
+        
+
+
+        
+        
+        
+            
+        
+                
+          
+            
+            
+                
+
+
+
+
+
+
+
+
+
+           
             
             
     def cadastrar(self):
