@@ -218,48 +218,50 @@ class PjPf():
         enviar_dados = customtkinter.CTkButton(abeturaPJ, text="Salvar")
         enviar_dados.grid(row=9, column=0, columnspan=2, pady=10)
 
-        # nome_var = tk.StringVar()
-        # especial = customtkinter.CTkCheckBox(abeturaPJ, text="Sim", variable=nome_var)
-        # self.especial.grid(row=8, column=1)
 
 
 
-class Alteracao:
-    def __init__(self):
-        self.AltCliente=customtkinter.CTkToplevel()
-        self.AltCliente.geometry("600x500")
-        self.AltCliente.grid_columnconfigure(1, weight=1)
-        self.AltCliente.grid_rowconfigure(5, weight=0)
-
-        f1 = customtkinter.CTkFrame(self.AltCliente, width=100, height=50)
-        f2 = customtkinter.CTkFrame(self.AltCliente, width=100, height=50)
-        f3 = customtkinter.CTkFrame(self.AltCliente, width=100, height=50)
-        f1.grid(row=0, column=0, sticky="nsew")
-        f2.grid(row=0, column=1, sticky="nsew")
-        f3.grid(row=0, column=2, sticky="nsew")
-
-        texto = "Alteração de dados do cliente"
-        label_texto = customtkinter.CTkLabel(f2, text=texto)
-        texto = font.Font(size=20)
-        label_texto.pack()
-
-        self.AltCliente.title('Alteração de Cliente')
-
-        label_nome = customtkinter.CTkLabel(self.AltCliente, text="Digite o CPF ou CNPJ")
-        label_nome.grid(row=1, column=0, sticky="nswe", padx=10, pady=10)
-
-        self.entry_cpf = customtkinter.CTkEntry(self.AltCliente, placeholder_text="CPF ou CNPJ")
-        self.entry_cpf.grid(row=1, column=1, sticky="nswe", padx=10, pady=10)
-
-        busca_cpf = customtkinter.CTkButton(self.AltCliente, text="Alterar" ,command=self.buscarCPF)
-        busca_cpf.grid(row=9, column=0, columnspan=2, pady=10)
-
-    def buscarCPF(self):
-        cpf = self.entry_cpf.get()
+# def button_click_event():
+#         dialog = customtkinter.CTkInputDialog(text="Digite o CPF", title="Buscar CPF")
+#         cpf=dialog.get_input()
+#         if cpf is not None:
+#             buscar_cpf(cpf)
+#         else:
+#             print("You canceled the dialog.")
+                
+                
+        
+        
+        
         
 
 
-        buscar_cpf(self,cpf)
+
+
+        
+
+        # Frame1 = customtkinter.CTkFrame(self.AltCliente, width=500,height=100)
+        # Frame1.place(x=150, y=0)
+        
+        
+
+
+        # self.AltCliente.title('Alteração de Cliente')
+
+        # label_nome = customtkinter.CTkLabel(Frame1, text="Digite o CPF ou CNPJ")
+        # label_nome.place(x=35, y=5)
+
+        # self.entry_cpf = customtkinter.CTkEntry(Frame1, placeholder_text="CPF ou CNPJ")
+        # self.entry_cpf.place(x=35, y=40)
+
+        # busca_cpf = customtkinter.CTkButton(Frame1, text="Alterar" ,command=self.buscarCPF)
+        # busca_cpf.place(x=35, y=100)
+        
+    
+        
+
+        
+            
 
 
 
@@ -369,7 +371,7 @@ class App(customtkinter.CTk):
         abertura_pf.grid(row=2, column=0, padx=20, pady=20)
 
 
-        alteracao_conta = customtkinter.CTkButton(self, text="Alteração de conta",command=Alteracao)
+        alteracao_conta = customtkinter.CTkButton(self, text="Alteração de conta",command=buscar_cpf)
         alteracao_conta.grid(row=4, column=0, padx=20, pady=20)
 
 
