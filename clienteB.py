@@ -141,8 +141,6 @@ def buscar_cpf():
     AltCliente.grid_columnconfigure(1, weight=1)
     AltCliente.grid_rowconfigure(7, weight=0)
 
-    # scrollable_frame = customtkinter.CTkScrollableFrame(AltCliente, width=200, height=200)
-    #     scrollable_frame.place(x=35, y=5)
     cursor.execute("SELECT * FROM clientes WHERE cpf = ?", (cpf,))
     global resultado
 
@@ -206,8 +204,9 @@ def buscar_cpf():
         salvar_button.grid(row=9, column=3, padx=10, pady=10)
         AltCliente.update()
     
-    def salvar_alteracoes(linha, cpf,novo_nome,novo_endereco,novo_tel,novo_email,novo_conta,novo_banco,novo_gerente):
-        cpf = resultado[linha][0]
+    def salvar_alteracoes(i, cpf,novo_nome,novo_endereco,novo_tel,novo_email,novo_conta,novo_banco,novo_gerente):
+        cpf = resultado[i][1]
+        print(resultado[i])
         novo_nome = nome_entry.get()
         novo_endereco = endereco_entry.get()
         novo_tel = tel_entry.get()
@@ -216,6 +215,7 @@ def buscar_cpf():
         novo_banco = Banco_entry.get()
         novo_gerente = gerente_entry.get()
         conn = sqlite3.connect('clientes.db')
+        cursor = conn.cursor()
         try:
             cursor.execute("UPDATE clientes SET nome = ?, endereco = ?, telefone = ?, email = ?, conta = ?, banco = ?, gerente = ? WHERE cpf = ?", (novo_nome, novo_endereco, novo_tel, novo_email, novo_conta, novo_banco, novo_gerente, cpf))
             conn.commit()

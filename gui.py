@@ -219,64 +219,6 @@ class PjPf():
         enviar_dados.grid(row=9, column=0, columnspan=2, pady=10)
 
 
-
-
-# def button_click_event():
-#         dialog = customtkinter.CTkInputDialog(text="Digite o CPF", title="Buscar CPF")
-#         cpf=dialog.get_input()
-#         if cpf is not None:
-#             buscar_cpf(cpf)
-#         else:
-#             print("You canceled the dialog.")
-                
-                
-        
-        
-        
-        
-
-
-
-
-        
-
-        # Frame1 = customtkinter.CTkFrame(self.AltCliente, width=500,height=100)
-        # Frame1.place(x=150, y=0)
-        
-        
-
-
-        # self.AltCliente.title('Alteração de Cliente')
-
-        # label_nome = customtkinter.CTkLabel(Frame1, text="Digite o CPF ou CNPJ")
-        # label_nome.place(x=35, y=5)
-
-        # self.entry_cpf = customtkinter.CTkEntry(Frame1, placeholder_text="CPF ou CNPJ")
-        # self.entry_cpf.place(x=35, y=40)
-
-        # busca_cpf = customtkinter.CTkButton(Frame1, text="Alterar" ,command=self.buscarCPF)
-        # busca_cpf.place(x=35, y=100)
-        
-    
-        
-
-        
-            
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 class CadastroBanco:
     def __init__(self):
         self.cadastroBanco = customtkinter.CTkToplevel()
