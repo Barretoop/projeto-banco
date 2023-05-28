@@ -1,6 +1,8 @@
 import tkinter as tk
 import sqlite3
 import customtkinter
+from datetime import datetime
+from PIL import Image
 
 from CTkMessagebox import CTkMessagebox
 
@@ -33,6 +35,12 @@ def cadastrar_cliente(self, nome, cpf, endereco, telefone, email, conta, banco, 
                         conta TEXT,
                         banco TEXT,
                         gerente TEXT,
+                        saldo TEXT)''')
+            cursor.execute('''CREATE TABLE IF NOT EXISTS movimentacao (
+                        nome TEXT,
+                        cpf TEXT,
+                        tipo_movimentacao TEXT,
+                        data TEXT,
                         saldo TEXT)''')
     
 
@@ -180,6 +188,8 @@ def buscar_cpf():
     AltCliente.geometry("500x500")
     AltCliente.grid_columnconfigure(1, weight=1)
     AltCliente.grid_rowconfigure(7, weight=0)
+    AltCliente.title('Cadastro de Cliente')
+    AltCliente.iconbitmap("img\icon.ico")
     
     cursor.execute("SELECT * FROM clientes WHERE cpf = ?", (cpf,))
     global resultado
@@ -303,13 +313,20 @@ def sevico_conta():
     
         
         if response == "Deposito":
-            resultado = cursor.fetchall()
+            saldoV = resultado[8]
+            msg = CTkMessagebox(title="Saldo Bancario !", message=f"Saldo do Cliente/Razão  : {saldoV}.00 R$ ",
+                    icon="info")
+            response = msg.get()
             deposito = customtkinter.CTkInputDialog(text="O valor que deseja depositar", title="Deposito")
             deposito = deposito.get_input() 
             conn = sqlite3.connect('clientes.db')
             cursor = conn.cursor()
             try:
-                cursor.execute("UPDATE clientes SET saldo = ? WHERE cpf = ?", (deposito, cpf))
+                cursor.execute("UPDATE clientes SET saldo = saldo + ? WHERE cpf = ?", (deposito, cpf))
+                conn.commit()
+                data_atual = datetime.now().strftime('%d-%m-%Y')
+                nome_cliente = resultado[0]
+                cursor.execute("INSERT INTO movimentacao (nome, cpf, tipo_movimentacao, saldo, data) VALUES (?, ?, ?, ?, ?)", (nome_cliente, cpf,  'Depósito', deposito, data_atual))
                 conn.commit()
                 CTkMessagebox(title="check", message="Deposito Efetuado !")
             except sqlite3.Error as e:
@@ -331,7 +348,10 @@ def sevico_conta():
             try:
                 cursor.execute("UPDATE clientes SET saldo = saldo - ? WHERE cpf = ?", (sacar, cpf))
                 conn.commit()
-                
+                data_atual = datetime.now().strftime('%d-%m-%Y')
+                nome_cliente = resultado[0]
+                cursor.execute("INSERT INTO movimentacao (nome, cpf, tipo_movimentacao, saldo, data) VALUES (?, ?, ?, ?, ?)", (nome_cliente, cpf,  'Saque', sacar, data_atual))
+                conn.commit()
                 cursor.execute("SELECT saldo FROM clientes WHERE cpf = ?", (cpf,))
                 Nsaldo = cursor.fetchone()
                 saldoN = Nsaldo[0]
@@ -352,7 +372,75 @@ def sevico_conta():
                 msg = CTkMessagebox(title="Saldo Bancario !", message=f"Saldo do Cliente/Razão  : {saldoN}.00 R$ ",
                     icon="info")
             
-            
+def consulta_extrato():
+    dialog = customtkinter.CTkInputDialog(text="Digite o CPF/CNPJ", title="Buscar CPF/CNPJ")
+    cpf = dialog.get_input()
+    conn = sqlite3.connect('clientes.db')
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM clientes WHERE cpf = ?", (cpf,))
+    global resultado
+    resultado = cursor.fetchone()
+    nome = resultado[0]
+    msg = CTkMessagebox(title="Verifique se e o cliente/Razão correto ?", message=f"Nome do Cliente/Razão  : {nome} ",
+                    icon="question", option_1="Esta correto", option_2="Não esta Correto")
+    response = msg.get()
+    if response == "Esta correto":
+            try:
+                cursor.execute("SELECT * FROM movimentacao WHERE cpf = ?", (cpf,))
+                movimentacoes = cursor.fetchall()
+                MovCliente=customtkinter.CTkToplevel()
+                MovCliente.geometry("800x500")
+                MovCliente.grid_columnconfigure(1, weight=1)
+                MovCliente.grid_rowconfigure(7, weight=0)
+                MovCliente.iconbitmap("img\icon.ico")
+                
+                scrollable_frame = customtkinter.CTkScrollableFrame(MovCliente,
+                                                                    width=700, 
+                                                                    height=400)
+                scrollable_frame.grid(row=0, column=0, padx=20, pady=20)  
+                
+                top_bar = customtkinter.CTkFrame(scrollable_frame)
+                top_bar.grid(row=0, column=0, sticky="ew")
+                
+                column_labels = ["Nome","CPF","Tipo de Movimentação", "Data", "Valor"]
+                for i, column_name in enumerate(column_labels):
+                    label = customtkinter.CTkLabel(top_bar, text=column_name)
+                    label.grid(row=0, column=i, padx=10, pady=5, sticky="w")
+                    
+                mov_frame = customtkinter.CTkFrame(scrollable_frame)
+                mov_frame.grid(row=1, column=0, sticky="nsew")
+                
+                for i, movimentacao in enumerate(movimentacoes):
+                    nomeC = movimentacao[0]
+                    Cpf = movimentacao[1]
+                    tipo_movimentacao = movimentacao[2]
+                    valor = movimentacao[3]
+                    data = movimentacao[4]
+                    
+                    label_nome = customtkinter.CTkLabel(mov_frame, text=f" {nomeC} ")
+                    label_nome.configure(anchor="center", justify="center")
+                    label_nome.grid(row=i, column=0, padx=10, pady=5, sticky="ew")
+                    
+                    label_cpf = customtkinter.CTkLabel(mov_frame, text=f" {Cpf} ")
+                    label_cpf.configure(anchor="center", justify="center")
+                    label_cpf.grid(row=i, column=1, padx=10, pady=5,sticky="ew")
+                    
+                    label_tipo = customtkinter.CTkLabel(mov_frame, text=f" {tipo_movimentacao} ")
+                    label_tipo.configure(anchor="center", justify="center")
+                    label_tipo.grid(row=i, column=2, padx=10, pady=5, sticky="ew")
+
+                    label_valor = customtkinter.CTkLabel(mov_frame, text=f" {valor} ")
+                    label_valor.configure(anchor="center", justify="center")
+                    label_valor.grid(row=i, column=3, padx=10, pady=5, sticky="ew")
+
+                    label_data = customtkinter.CTkLabel(mov_frame, text=f" {data}.00R$ ")
+                    label_data.configure(anchor="center", justify="center")
+                    label_data.grid(row=i, column=4, padx=10, pady=5, sticky="ew")
+
+            except sqlite3.Error as e:
+                CTkMessagebox(title="Info", message=f"Erro: {str(e)}")
+            finally:
+                conn.close()
 
     
     
