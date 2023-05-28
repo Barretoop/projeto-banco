@@ -189,7 +189,7 @@ def buscar_cpf():
     AltCliente.grid_columnconfigure(1, weight=1)
     AltCliente.grid_rowconfigure(7, weight=0)
     AltCliente.title('Cadastro de Cliente')
-    AltCliente.iconbitmap("img\icon.ico")
+    
     
     cursor.execute("SELECT * FROM clientes WHERE cpf = ?", (cpf,))
     global resultado
