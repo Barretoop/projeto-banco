@@ -4,6 +4,9 @@ from tkinter import font
 from clienteB import cadastrar_cliente
 from clienteB import cadastrar_banco
 from clienteB import buscar_cpf
+from clienteB import sevico_conta
+from clienteB import excluir_banco
+
 from CTkMessagebox import CTkMessagebox
 import sqlite3
 
@@ -14,16 +17,29 @@ import sqlite3
 class PjPf():
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        msg = CTkMessagebox(title="Qual tipo de conta ?", message="Pessoa Fisica ou Juridica ?",  
-                                icon="question",option_1="Cancelar", option_3="Fisica", option_2="Juridica")
-        response = msg.get()
+        conn = sqlite3.connect('clientes.db')
+        cursor = conn.cursor()
+        try:
+            cursor.execute("SELECT COUNT(*) FROM bancos ")
+        except sqlite3.Error as e:
+            CTkMessagebox(title="Erro", message=f" Operaçao Cancelada Cadastre uma Agencia antes! {str(e)}",  
+                          icon="warning")   
+   
+        resultadoC = cursor.fetchone()
+        nomeC = resultadoC[0]
+        
+        if nomeC > 0:
+            msg = CTkMessagebox(title="Qual tipo de conta ?", message="Pessoa Fisica ou Juridica ?",  
+                                    icon="question",option_1="Cancelar", option_3="Fisica", option_2="Juridica")
+            response = msg.get()
+            
         if response =="Fisica":
-           
-           self.abrir_cadastro_cliente_PF()
-        elif response == "Juridica":
+        
+            self.abrir_cadastro_cliente_PF()
+        
+        if response == "Juridica":
             self._abrir_cadastro_cliente_Pj()
-        else:
-            msg.destroy()
+        
 
 
 
@@ -47,7 +63,11 @@ class PjPf():
         Cad_pf.title('Cadastro de Cliente')
 
         label_nome = customtkinter.CTkLabel(Cad_pf, text="Digite seu nome")
-        label_nome.grid(row=1, column=0, sticky="nswe", padx=10, pady=10)
+        label_nome.grid(row=1,
+                        column=0,
+                        sticky="nswe", 
+                        padx=10, 
+                        pady=10)
         self.entry_nome = customtkinter.CTkEntry(Cad_pf, placeholder_text="Digite seu nome completo")
         self.entry_nome.grid(row=1, column=1, sticky="nswe", padx=10, pady=10)
 
@@ -85,6 +105,8 @@ class PjPf():
 
         self.enviar_dados = customtkinter.CTkButton(Cad_pf, text="Salvar", command=self.cadastrar)
         self.enviar_dados.grid(row=10, column=0, columnspan=2, pady=10)
+        
+        
 
 
 
@@ -113,7 +135,7 @@ class PjPf():
 
         self.entry_gen = customtkinter.CTkOptionMenu(Cad_pf, values=[], variable=gen_sel)
         self.entry_gen.grid(row=7, column=1, sticky="nswe", padx=10, pady=10)
-        self.entry_gen.set("Selecione")
+        self.entry_gen.set("")
         self.entry_gen.configure(values=gerente)
 
         conn = sqlite3.connect('clientes.db')
@@ -140,7 +162,7 @@ class PjPf():
         radiobutton_1 = customtkinter.CTkSwitch(Cad_pf, text="Sim", variable=radio_var, onvalue="on", offvalue="off" ,command=atualizar_label)
         radiobutton_1.grid(row=9, column=1, sticky="nswe")
         print(radio_var.get())
-        slider = customtkinter.CTkSlider(Cad_pf, from_=0, to=100 ,width=100,height=20 )
+        slider = customtkinter.CTkSlider(Cad_pf, from_= 0, to=100 ,width=100,height=20 )
 
             
             
@@ -153,9 +175,12 @@ class PjPf():
         conta = self.entry_conta.get()
         banco= self.entry_bc.get()
         gerente = self.entry_gen.get()
+        saldo="0"
+    
+        
 
         
-        cadastrar_cliente(self, nome, cpf, endereco, telefone, email, conta,banco,gerente)
+        cadastrar_cliente(self, nome, cpf, endereco, telefone, email, conta,banco,gerente, saldo)
 
     def _abrir_cadastro_cliente_Pj(self):
         abeturaPJ = customtkinter.CTkToplevel()
@@ -256,6 +281,9 @@ class CadastroBanco:
 
         salvar_dados = customtkinter.CTkButton(self.cadastroBanco, text="Salvar",command=self.cadastrarBanco)
         salvar_dados.grid(row=9, column=0, columnspan=2, pady=10)
+        
+        exluir_dados = customtkinter.CTkButton(self.cadastroBanco, text="exluir",command=excluir_banco)
+        exluir_dados.grid(row=9, column=1, columnspan=2, pady=10)
 
     def cadastrarBanco(self):
         banco = self.entry_banco.get()
@@ -292,8 +320,18 @@ class MovimentaBancaria(customtkinter.CTkToplevel):
         banco = customtkinter.CTkEntry(self, placeholder_text="CPF ou CNPJ")
         banco.grid(row=1, column=1, sticky="nswe", padx=10, pady=10)
 
-        alterar_dados = customtkinter.CTkButton(self, text="Salvar")
-        alterar_dados.grid(row=9, column=0, columnspan=2, pady=10)
+        buscar_dados = customtkinter.CTkButton(self, text="Buscar")
+        buscar_dados.grid(row=9, column=0, columnspan=2, pady=10)
+        
+        saque_dados = customtkinter.CTkButton(self, text="Saque")
+        saque_dados.grid(row=9, column=0, columnspan=2, pady=10)
+        
+        Consulta_saldo_dados = customtkinter.CTkButton(self, text="Consulta De Saldo")
+        Consulta_saldo_dados.grid(row=9, column=0, columnspan=2, pady=10)
+        
+        
+        Consulta_saldo_dados = customtkinter.CTkButton(self, text="Consulta De Saldo")
+        Consulta_saldo_dados.grid(row=9, column=0, columnspan=2, pady=10)
 
 
     
@@ -321,7 +359,7 @@ class App(customtkinter.CTk):
         cadastro_banco.grid(row=5, column=0, padx=20, pady=20)
 
 
-        servico_conta = customtkinter.CTkButton(self, text="Serviços de conta", command=MovimentaBancaria)
+        servico_conta = customtkinter.CTkButton(self, text="Serviços de conta", command=sevico_conta)
         servico_conta.grid(row=6, column=0, padx=20, pady=20)
         
         self.toplevel_window = None
